@@ -154,7 +154,12 @@ export const getInitialVideoVolume = (): number => {
 export const getInitialSidebarMode = (): SidebarMode => {
   if (typeof window === "undefined") return "classic";
   const stored = localStorage.getItem("sidebarMode") as SidebarMode | null;
-  if (stored === "classic" || stored === "floating") return stored;
+  if (
+    stored === "classic" ||
+    stored === "floating" ||
+    stored === "floating_fixed"
+  )
+    return stored;
   return "classic";
 };
 

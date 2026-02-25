@@ -208,9 +208,18 @@ export function Sidebar({
     };
   }, []);
 
-  // 悬浮菜单收起时自动关闭用户菜单
   useEffect(() => {
-    if (mode === "floating" && collapsed && userMenuOpen) {
+    if (mode === "floating_fixed" && !collapsed) {
+      if (isControlled) {
+        onCollapseChangeProp?.(true);
+      } else {
+        setInternalCollapsed(true);
+      }
+    }
+  }, [collapsed, isControlled, mode, onCollapseChangeProp]);
+
+  useEffect(() => {
+    if (mode !== "classic" && collapsed && userMenuOpen) {
       setUserMenuOpen(false);
     }
   }, [collapsed, mode, userMenuOpen]);

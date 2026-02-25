@@ -27,7 +27,10 @@ import type { SidebarMode } from "@/components/pages/Settings/types";
 function App() {
   const [activeTab, setActiveTab] = useState("home");
   const [user, setUser] = useState<StoredUser | null>(() => getStoredUser());
-  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => true);
+  const initialSidebarMode = getInitialSidebarMode();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() =>
+    initialSidebarMode !== "classic",
+  );
   const isMacOS =
     typeof navigator !== "undefined" &&
     navigator.platform.toUpperCase().indexOf("MAC") >= 0;
@@ -64,12 +67,14 @@ function App() {
   const [isDownloadingUpdate, setIsDownloadingUpdate] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [sidebarMode, setSidebarMode] = useState<SidebarMode>(() =>
-    getInitialSidebarMode(),
+    initialSidebarMode,
   );
 
   useEffect(() => {
     const handleSidebarModeChange = () => {
-      setSidebarMode(getInitialSidebarMode());
+      const nextMode = getInitialSidebarMode();
+      setSidebarMode(nextMode);
+      setSidebarCollapsed(nextMode !== "classic");
     };
     window.addEventListener("sidebarModeChanged", handleSidebarModeChange);
     return () =>
@@ -181,7 +186,7 @@ function App() {
             <TitleBar />
           </div>
         )}
-        {sidebarMode === "floating" ? (
+        {sidebarMode === "floating" || sidebarMode === "floating_fixed" ? (
           <>
             {/* 悬浮侧边栏 - 绝对定位，占满窗口高度 */}
             <div
@@ -205,7 +210,7 @@ function App() {
                 collapsed={sidebarCollapsed}
                 onCollapseChange={setSidebarCollapsed}
                 collapsedWidth={SIDEBAR_COLLAPSED_WIDTH}
-                mode="floating"
+                mode={sidebarMode}
               />
             </div>
 

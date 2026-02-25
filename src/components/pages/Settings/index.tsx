@@ -162,7 +162,10 @@ export function Settings() {
       localStorage.setItem("sidebarMode", newMode);
       window.dispatchEvent(new Event("sidebarModeChanged"));
 
-      if (newMode === "floating" && !showTitleBar) {
+      if (
+        (newMode === "floating" || newMode === "floating_fixed") &&
+        !showTitleBar
+      ) {
         setShowTitleBar(true);
         localStorage.setItem("showTitleBar", "true");
         window.dispatchEvent(new Event("titleBarVisibilityChanged"));

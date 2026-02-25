@@ -205,7 +205,8 @@ export function AppearanceSection({
             <Select
               options={[
                 { value: "classic", label: "经典 (默认)" },
-                { value: "floating", label: "悬浮" },
+                { value: "floating", label: "悬浮（展开）" },
+                { value: "floating_fixed", label: "悬浮（固定）" },
               ]}
               value={sidebarMode}
               onChange={(value) => setSidebarMode(value as SidebarMode)}
@@ -216,7 +217,7 @@ export function AppearanceSection({
         </Item>
 
         {/* 只在 macOS 上显示顶部栏开关，悬浮菜单模式下隐藏 */}
-        {isMacOS && sidebarMode !== "floating" && (
+        {isMacOS && sidebarMode === "classic" && (
           <>
             <ItemSeparator />
             <Item variant="outline" className="border-0">
