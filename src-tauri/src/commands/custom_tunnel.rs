@@ -1,4 +1,5 @@
 use crate::models::{FrpcProcesses, LogMessage, ProcessGuardState};
+use crate::utils::resolve_frpc_path;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::io::{BufRead, BufReader};
@@ -47,14 +48,6 @@ fn get_custom_tunnel_hash(tunnel_id: &str) -> i32 {
 
 fn get_config_file_name(tunnel_id: &str) -> String {
     format!("{}{}{}", CONFIG_FILE_PREFIX, tunnel_id, CONFIG_FILE_EXT)
-}
-
-fn get_frpc_path(app_dir: &PathBuf) -> PathBuf {
-    if cfg!(target_os = "windows") {
-        app_dir.join("frpc.exe")
-    } else {
-        app_dir.join("frpc")
-    }
 }
 
 fn spawn_log_reader(
@@ -401,7 +394,7 @@ pub async fn start_custom_tunnel(
     }
 
     let app_dir = get_app_dir(&app_handle)?;
-    let frpc_path = get_frpc_path(&app_dir);
+    let frpc_path = resolve_frpc_path(&app_handle)?;
 
     if !frpc_path.exists() {
         return Err("frpc 未找到，请先下载".to_string());

@@ -1,5 +1,5 @@
 use crate::models::{FrpcProcesses, LogMessage, ProcessGuardState, TunnelConfig};
-use crate::utils::sanitize_log;
+use crate::utils::{resolve_frpc_path, sanitize_log};
 use std::fmt::Write;
 use std::io::{BufRead, BufReader};
 use std::process::{Command as StdCommand, Stdio};
@@ -122,11 +122,7 @@ pub async fn start_frpc(
             .map_err(|e| format!("设置配置文件权限失败: {}", e))?;
     }
 
-    let frpc_path = if cfg!(target_os = "windows") {
-        app_dir.join("frpc.exe")
-    } else {
-        app_dir.join("frpc")
-    };
+    let frpc_path = resolve_frpc_path(&app_handle)?;
 
     if !frpc_path.exists() {
         return Err("frpc 未找到，请先下载".to_string());
