@@ -1,4 +1,5 @@
 use crate::models::{DownloadInfo, DownloadProgress, FrpcDownload, FrpcInfoResponse};
+use crate::utils::{app_data_frpc_path, resolve_frpc_path};
 use futures_util::StreamExt;
 use sha2::{Digest, Sha256};
 use std::fs::OpenOptions;
@@ -183,18 +184,11 @@ pub async fn get_download_info() -> Result<DownloadInfo, String> {
 
 #[tauri::command]
 pub async fn check_frpc_exists(app_handle: tauri::AppHandle) -> Result<bool, String> {
-    let app_dir = app_handle
-        .path()
-        .app_data_dir()
-        .map_err(|e| e.to_string())?;
-
-    let frpc_path = if cfg!(target_os = "windows") {
-        app_dir.join("frpc.exe")
-    } else {
-        app_dir.join("frpc")
+    let exists = match resolve_frpc_path(&app_handle) {
+        Ok(path) => path.exists(),
+        Err(_) => false,
     };
-
-    Ok(frpc_path.exists())
+    Ok(exists)
 }
 
 #[tauri::command]
@@ -220,18 +214,12 @@ pub async fn download_frpc(app_handle: tauri::AppHandle) -> Result<String, Strin
     let expected_hash = download_info.hash;
     let expected_size = download_info.size;
 
-    let app_dir = app_handle
-        .path()
-        .app_data_dir()
-        .map_err(|e| e.to_string())?;
-
+    let frpc_path = app_data_frpc_path(&app_handle)?;
+    let app_dir = frpc_path
+        .parent()
+        .ok_or_else(|| "无法获取 frpc 目录".to_string())?
+        .to_path_buf();
     std::fs::create_dir_all(&app_dir).map_err(|e| e.to_string())?;
-
-    let frpc_path = if cfg!(target_os = "windows") {
-        app_dir.join("frpc.exe")
-    } else {
-        app_dir.join("frpc")
-    };
 
     let client = reqwest::Client::builder()
         .timeout(std::time::Duration::from_secs(DOWNLOAD_TIMEOUT))

@@ -139,7 +139,7 @@ pub fn run() {
                              tauri::async_runtime::spawn(async move {
                                  // 短暂延时确保系统状态稳定
                                  tokio::time::sleep(tokio::time::Duration::from_millis(50)).await;
-                                 
+
                                  // 获取当前窗口状态并相应处理
                                  match window.is_visible() {
                                      Ok(true) => {
@@ -228,10 +228,13 @@ pub fn run() {
             commands::get_tunnel_auto_start,
             commands::set_tunnel_auto_start,
             commands::http_request,
+            commands::http_request_raw,
             commands::hide_window,
             commands::show_window,
             commands::quit_app,
             commands::ping_host,
+            commands::get_ports,
+            commands::check_local_port,
             commands::save_custom_tunnel,
             commands::get_custom_tunnels,
             commands::get_custom_tunnel_config,
@@ -250,7 +253,7 @@ pub fn run() {
             commands::process_guard::remove_guarded_process,
             commands::process_guard::check_log_and_stop_guard,
             commands::fix_frpc_ini_tls,
-            commands::resolve_domain_to_ip
+            commands::resolve_domain_to_ip,
         ])
         .build(tauri::generate_context!())
         .expect("error while building tauri application")
