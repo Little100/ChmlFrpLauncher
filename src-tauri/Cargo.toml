@@ -1,6 +1,6 @@
 [package]
 name = "ChmlFrpLauncher"
-version = "0.7.1"
+version = "0.7.3"
 description = "ChmlFrp的官方启动器"
 authors = ["南充市轻爪网络科技有限公司 <chaoji@chcat.cn>"]
 license = "Apache-2.0"
@@ -29,6 +29,7 @@ tauri-plugin-autostart = "2"
 reqwest = { version = "0.12", features = ["stream"] }
 futures-util = "0.3"
 chrono = "0.4"
+libc = "0.2"
 strip-ansi-escapes = "0.2"
 sha2 = "0.10"
 hex = "0.4"
