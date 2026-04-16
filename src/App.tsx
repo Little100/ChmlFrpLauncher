@@ -18,7 +18,6 @@ import { useBackground } from "@/components/App/hooks/useBackground";
 import { useDeepLink } from "@/components/App/hooks/useDeepLink";
 import { useFrpcDownload } from "@/components/App/hooks/useFrpcDownload";
 import { useUpdateCheck } from "@/components/App/hooks/useUpdateCheck";
-import { useStartupAutoStartTunnels } from "@/components/App/hooks/useStartupAutoStartTunnels";
 import { updateService } from "@/services/updateService";
 import { toast } from "sonner";
 import { BackgroundLayer } from "@/components/App/components/BackgroundLayer";
@@ -47,7 +46,6 @@ function App() {
   useAppTheme();
   useAppInitialization();
   useDeepLink(user, setUser);
-  useStartupAutoStartTunnels(user);
   useTunnelNotifications(activeTab);
   const { showCloseConfirmDialog, setShowCloseConfirmDialog } = useWindowEvents();
   const { showTitleBar } = useTitleBar();
