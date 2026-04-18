@@ -18,6 +18,7 @@ import { useBackground } from "@/components/App/hooks/useBackground";
 import { useDeepLink } from "@/components/App/hooks/useDeepLink";
 import { useFrpcDownload } from "@/components/App/hooks/useFrpcDownload";
 import { useUpdateCheck } from "@/components/App/hooks/useUpdateCheck";
+import { useAutoStartTunnels } from "@/components/App/hooks/useAutoStartTunnels";
 import { updateService } from "@/services/updateService";
 import { toast } from "sonner";
 import { BackgroundLayer } from "@/components/App/components/BackgroundLayer";
@@ -45,6 +46,7 @@ function App() {
   // 其他功能 Hooks
   useAppTheme();
   useAppInitialization();
+  useAutoStartTunnels(user);
   useDeepLink(user, setUser);
   useTunnelNotifications(activeTab);
   const { showCloseConfirmDialog, setShowCloseConfirmDialog } = useWindowEvents();
