@@ -3,11 +3,11 @@ import { toast } from "sonner";
 import {
   fetchUserInfo,
   getStoredUser,
-  clearStoredUser,
   saveStoredUser,
   type UserInfo,
   type StoredUser,
 } from "@/services/api";
+import { performLogout } from "@/services/logout";
 import { homePageCache } from "../cache";
 
 function getInitialUserInfo(): UserInfo | null {
@@ -88,7 +88,7 @@ export function useUserInfo(
           message.includes("无效的登录状态") ||
           message.includes("invalid_grant");
         if (isAuthError) {
-          clearStoredUser();
+          await performLogout();
           setUserInfo(null);
           homePageCache.userInfo = null;
           homePageCache.flowData = [];
