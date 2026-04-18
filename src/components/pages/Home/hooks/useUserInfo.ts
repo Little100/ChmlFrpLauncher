@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { toast } from "sonner";
 import {
   fetchUserInfo,
   getStoredUser,
@@ -81,17 +82,19 @@ export function useUserInfo(
       } catch (err) {
         const message = err instanceof Error ? err.message : "";
         const currentStoredUser = getStoredUser();
-        if (
+        const isAuthError =
           !currentStoredUser ||
           message.includes("登录信息已过期") ||
-          message.includes("invalid_grant")
-        ) {
+          message.includes("无效的登录状态") ||
+          message.includes("invalid_grant");
+        if (isAuthError) {
           clearStoredUser();
           setUserInfo(null);
           homePageCache.userInfo = null;
           homePageCache.flowData = [];
           homePageCache.signInInfo = null;
           onUserChangeRef.current?.(null);
+          toast.error("登录状态已失效，请重新登录");
         }
         console.error("获取用户信息失败", err);
       }
